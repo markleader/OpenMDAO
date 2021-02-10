@@ -398,10 +398,11 @@ class SqliteRecorder(CaseRecorder):
             var_settings['execution_order'] = var_order
             var_settings_json = json.dumps(var_settings, default=default_noraise)
 
-            with self.connection as c:
-                c.execute("UPDATE metadata SET " +
-                          "abs2prom=?, prom2abs=?, abs2meta=?, var_settings=?, conns=?",
-                          (abs2prom, prom2abs, abs2meta, var_settings_json, conns))
+            if MPI.COMM_WORLD.comm.rank == 0:
+                with self.connection as c:
+                    c.execute("UPDATE metadata SET " +
+                            "abs2prom=?, prom2abs=?, abs2meta=?, var_settings=?, conns=?",
+                            (abs2prom, prom2abs, abs2meta, var_settings_json, conns))
 
     def record_iteration_driver(self, driver, data, metadata):
         """
