@@ -168,6 +168,7 @@ class SqliteCaseReader(BaseCaseReader):
             # Auto-IVC
             self._conns = json_loads(row['conns'])
 
+
         # add metadata for VOIs (des vars, objective, constraints) to problem metadata
         if version >= 4:
             self.problem_metadata['variables'] = json_loads(row['var_settings'])
